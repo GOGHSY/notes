@@ -3,7 +3,7 @@ title: "Day 1 note"
 format:
   html:
     code-fold: true
-jupter: pthon3
+jupter: python3
 ---
 # Image Vector Representation
   - Image data are preprocessed before working with machine learning algorithms because the computer directly cannot work on the image.
