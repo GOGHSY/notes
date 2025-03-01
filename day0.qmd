@@ -1,0 +1,60 @@
+---
+title: "Day 1 note"
+format:
+  html:
+    code-fold: true
+jupter: pthon3
+---
+# Image Vector Representation
+  - Image data are preprocessed before working with machine learning algorithms because the computer directly cannot work on the image.
+  - In openCV the ml module requires that the image data is fed into the machine learning algorithms in the form of feature vectors of equal length.
+  - One way of structuring the image data is to flatten it out into a one-dimensional vector, where the vector’s length would equal the number of pixels in the image.(not the most effective when working with larger images).
+
+## The Histogram of Oriented Gradients Technique
+ - Called the HOG
+ - Feature extraction process that aims to represent the local shape and apperance of objects inside the image space by a distribution of their edge directions.
+ - steps in HOG:
+      - computes horizontal and vertical image gradients then the magnitude and direction of the gradient are computed for every pixels.
+      - Divide the image into non-overlapping cells of fixed size and compute a histogram of gradients for each cell. This histogram representaiton of every image cell is more compact and more robust to noise. The cell size is typically set according to the size of the feature we want to capture.
+      - concactinates the histogram over blocks of cells into one dimenstional feature vectors and normalize them making the descriptor more robust to lighting variations.
+      - Finally, it concactinates all normalized feature vectors representing the blocks of cells to obtain a final feature vector representation of the entire image.
+
+## HOG arguments to the corresponding steps above
+- window size (winSize) that corresponds to the minimum object size to be detected.
+- cell size (cellSize) typically captures the size of the image features of interest.
+- block size (blockSize) tackles the problem of variation in illumination.
+- block stride(blockStride) controls how much neighbouring blocks overlap.
+- number of histogram bins (nbins) to capture gradients between 0 and 180 degrees
+```{python}
+
+def hog_descriptors(imgs):
+  # Create a list to store the HOG feature vectors
+  hog_features =[]
+
+  # Set parameter values for the HOG descriptor based on the image data
+  winSize =(20,20)
+  blockSize =(10,10)
+  blockStride =(5,5)
+  cellSize = (10,10)
+  nbins = 9
+
+  # Set the remaining parameters to default
+  derivAperture =1
+  winSigma = -1
+  histogramNormType =0
+  L2HysThreshold =0.2
+  gammaCorrection = False
+  nlevels = 64
+
+  # Create HOG descriptor
+  hog = HOGDescriptor(winSize,blockSize,blockSize,blockStride,cellSize,nbins,histogramNormType,L2HysThreshold, gammaCorrection)
+
+  # Compute HOG descriptors for the input images and append the features
+  for img in imgs:
+    hist = hog.compute(img.reshape(20,20).astype(uint8))
+    hog_features.append(hist)
+
+  return array(hog_features)
+
+
+```
